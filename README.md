@@ -11,15 +11,15 @@ More gestures will be added
 
 2. Hand Landmark connections-
 ![image not loaded](assets/palm.png)
-![image not loaded](assets/curled_fingers.png)
 
 3. Gesture Recognizer-
-Open Palm
 ![image not loaded](assets/Screenshot%20From%202026-03-01%2017-37-50.png)
+Open Palm
 
 
-Victory
+
 ![image not loaded](assets/Screenshot%20From%202026-03-01%2017-38-02.png)
+Victory
 
 
 ## Dependencies:
