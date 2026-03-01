@@ -103,15 +103,9 @@ def Gesture_Recognizer():
               cv2.line(frame, (x1, y1), (x2, y2), (grey, grey, grey), 2)        
 
             #------ Overlaying gesture name on frame ---*----
-
-            # Get gesture for this hand
-            if latest_result.gestures and len(latest_result.gestures) > idx:
-              top_gesture = latest_result.gestures[idx][0]
-              gesture_name = top_gesture.category_name
-              score = round(top_gesture.score, 2)
-
+            # After the gesture is recognized, label it and display on frame
+            def display_Labeled_gesture(gesture_name: str, score):
               label = f"{gesture_name} ({score})"
-
               # Put text at bottom-right corner of box
               text_size, _ = cv2.getTextSize(label,
                 cv2.FONT_HERSHEY_SIMPLEX,0.7,2)
@@ -120,25 +114,37 @@ def Gesture_Recognizer():
               text_y = y_max + text_size[1]
 
               # Prevent overflow
-              text_y = min(h - 10, text_y)
+              text_y = min(h - 10, text_y+12)
 
               cv2.putText(
-              frame,label,(text_x, text_y),
-              cv2.FONT_HERSHEY_SIMPLEX,
-              0.7,(240, 248, 247),2)
+                frame,label,(text_x, text_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,(240, 248, 247),2)
+            
+            #-------Custom Gestures------
+            def is_one(hand_landmarks):
+
+              index_up = hand_landmarks[8].y < hand_landmarks[6].y
+              middle_down = hand_landmarks[12].y > hand_landmarks[10].y
+              ring_down = hand_landmarks[16].y > hand_landmarks[14].y
+              pinky_down = hand_landmarks[20].y > hand_landmarks[18].y
+
+              return index_up and middle_down and ring_down and pinky_down
+
+            if is_one(hand_landmarks):
+              gesture_name="One"
+              score=0.8
+              display_Labeled_gesture(gesture_name, score)
+
+            # Get gesture for this hand
+            elif latest_result.gestures and len(latest_result.gestures) > idx:              
+              top_gesture = latest_result.gestures[idx][0]
+              gesture_name = top_gesture.category_name
+              score = round(top_gesture.score, 2)
 
 
-        # upscale frame (frame drops by 3-4 -depends on system)
-        def Upscale_and_Resize_Frame(frame):
-          # Scale image up by 2x using high-quality interpolation
-          width = int(frame.shape[1] * 2)
-          height = int(frame .shape[0] * 2)
-          dim = (width, height)
+              display_Labeled_gesture(gesture_name, score)
 
-          # INTER_CUBIC is slower but provides better results for upscaling
-          resized_img = cv2.resize(frame, dim, interpolation=cv2.INTER_CUBIC)
-          return resized_img
-        # frame = Upscale_and_Resize_Frame(frame)
 
         def display_FPS_on_frame(frame, position=(10, 50),font=cv2.FONT_HERSHEY_SIMPLEX, scale=1, color=(70, 70, 191), thickness=2, line_type=cv2.LINE_AA):
           # FPS calculation
