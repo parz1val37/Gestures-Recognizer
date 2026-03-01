@@ -14,7 +14,10 @@ More gestures will be added
 ![image not loaded](assets/curled_fingers.png)
 
 3. Gesture Recognizer-
-![Failed to load GIF](assets/gif_recog.mp4)
+Open Palm
+![image not loaded](assets/Screenshot%20From%202026-03-01%2017-37-50.png)
+Victory
+![image not loaded](assets/Screenshot%20From%202026-03-01%2017-38-02.png)
 
 
 ## Dependencies:
