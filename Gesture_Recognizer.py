@@ -24,13 +24,13 @@ def Gesture_Recognizer():
   with vision.GestureRecognizer.create_from_options(options) as recognizer:
     try:
       cap = cv2.VideoCapture(0)
-
+      pTime=0
       while cap.isOpened():
         success, frame = cap.read()
         if not success:
           break
 
-        frame = cv2.resize(frame, (1200, 900))
+        frame = cv2.resize(frame, (1300, 900))
         frame = cv2.flip(frame, 1)
 
         rgb_img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -88,8 +88,28 @@ def Gesture_Recognizer():
               0.7,(0, 255, 0),2)
 
 
+        # upscale frame (frame drops by 3-4 -depends on system)
+        def Upscale_and_Resize_Frame(frame):
+          # Scale image up by 2x using high-quality interpolation
+          width = int(frame.shape[1] * 2)
+          height = int(frame .shape[0] * 2)
+          dim = (width, height)
 
+          # INTER_CUBIC is slower but provides better results for upscaling
+          resized_img = cv2.resize(frame, dim, interpolation=cv2.INTER_CUBIC)
+          return resized_img
+        # frame = Upscale_and_Resize_Frame(frame)
 
+        def display_FPS_on_frame(frame, position=(10, 50),font=cv2.FONT_HERSHEY_SIMPLEX, scale=1, color=(70, 70, 191), thickness=2, line_type=cv2.LINE_AA):
+          # FPS calculation
+          nonlocal pTime
+          cTime = time.time()
+          fps = int(1/(cTime-pTime))
+          pTime = cTime
+
+          # Display FPS on frame
+          cv2.putText(frame, f"FPS: {fps}", position, font, scale, color, thickness, line_type)
+        display_FPS_on_frame(frame)
 
 
         cv2.imshow("GESTURE RECOGNIZER", frame)
