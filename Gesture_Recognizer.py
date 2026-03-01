@@ -3,6 +3,9 @@ import time
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+from mediapipe.tasks.python.vision import HandLandmarksConnections
+
+
 
 def Gesture_Recognizer():
   # callback function requires for LIVE_STREAM Mode
@@ -39,9 +42,10 @@ def Gesture_Recognizer():
         timestamp= int((time.time()*1000))
         recognizer.recognize_async(mp_image, timestamp)
 
-        h, w, _ = frame.shape
         if latest_result and latest_result.hand_landmarks:
+          h, w, _ = frame.shape
           for idx, hand_landmarks in enumerate(latest_result.hand_landmarks):
+            #------------*- Rectangular Box -*------
 
             # Convert normalized landmarks to pixel coords
             x_coords = [int(lm.x * w) for lm in hand_landmarks]
@@ -63,6 +67,42 @@ def Gesture_Recognizer():
               (x_min, y_min),
               (x_max, y_max),
               (67, 119, 254),2)
+            
+            #---------*- HandLandmark Connections and Circle landmarkpoints-*-------
+            
+            # Draw landmarks (BLACK circles)
+            for lm in hand_landmarks:
+              cx, cy = int(lm.x * w), int(lm.y * h)
+              cv2.circle(frame, (cx, cy), 5, (0, 0, 0), -1)            
+            
+            # Collect z values for normalization
+            z_values = [lm.z for lm in hand_landmarks]
+            z_min = min(z_values)
+            z_max = max(z_values)
+
+            # Avoid division by zero
+            z_range = z_max - z_min if z_max - z_min != 0 else 1
+            
+            # Draw depth-based grey connections
+            for connection in HandLandmarksConnections.HAND_CONNECTIONS:
+              start = hand_landmarks[connection.start]
+              end = hand_landmarks[connection.end]
+
+              x1, y1 = int(start.x * w), int(start.y * h)
+              x2, y2 = int(end.x * w), int(end.y * h)
+
+              # Average depth of the connection
+              avg_z = (start.z + end.z) / 2
+
+              # Normalize depth → 0 to 1
+              norm_z = (avg_z - z_min) / z_range
+
+              # Map to grey intensity (closer = lighter)
+              grey = int(255 * (1 - norm_z*1.2))
+
+              cv2.line(frame, (x1, y1), (x2, y2), (grey, grey, grey), 2)        
+
+            #------ Overlaying gesture name on frame ---*----
 
             # Get gesture for this hand
             if latest_result.gestures and len(latest_result.gestures) > idx:
