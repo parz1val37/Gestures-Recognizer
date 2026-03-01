@@ -62,7 +62,7 @@ def Gesture_Recognizer():
               frame,
               (x_min, y_min),
               (x_max, y_max),
-              (0, 255, 0),2)
+              (67, 119, 254),2)
 
             # Get gesture for this hand
             if latest_result.gestures and len(latest_result.gestures) > idx:
@@ -85,7 +85,7 @@ def Gesture_Recognizer():
               cv2.putText(
               frame,label,(text_x, text_y),
               cv2.FONT_HERSHEY_SIMPLEX,
-              0.7,(0, 255, 0),2)
+              0.7,(240, 248, 247),2)
 
 
         # upscale frame (frame drops by 3-4 -depends on system)
