@@ -16,6 +16,8 @@ More gestures will be added
 3. Gesture Recognizer-
 Open Palm
 ![image not loaded](assets/Screenshot%20From%202026-03-01%2017-37-50.png)
+
+
 Victory
 ![image not loaded](assets/Screenshot%20From%202026-03-01%2017-38-02.png)
 
