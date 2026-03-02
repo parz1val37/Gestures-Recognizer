@@ -42,8 +42,16 @@ def Gesture_Recognizer():
         timestamp= int((time.time()*1000))
         recognizer.recognize_async(mp_image, timestamp)
 
+        h, w, _ = frame.shape
+
         if latest_result and latest_result.hand_landmarks:
-          h, w, _ = frame.shape
+          def Show_Hand_detected():
+            text="Hand Detected"
+            (_, _), baseline = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+            x = 10
+            y = h - baseline - 10
+            cv2.putText(frame, text, (x, y), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
+          Show_Hand_detected()
           for idx, hand_landmarks in enumerate(latest_result.hand_landmarks):
             #------------*- Rectangular Box -*------
 
@@ -171,6 +179,15 @@ def Gesture_Recognizer():
 
               display_Labeled_gesture(gesture_name, score)
 
+        else:
+          # Hand not detected
+          def Show_No_Hand_detected():
+            text="No Hand Detected"
+            (_, _), baseline = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+            x = 10
+            y = h - baseline - 10
+            cv2.putText(frame, text, (x, y), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255,255,255), thickness=2)
+          Show_No_Hand_detected()
 
         def display_FPS_on_frame(frame, position=(10, 50),font=cv2.FONT_HERSHEY_SIMPLEX, scale=1, color=(70, 70, 191), thickness=2, line_type=cv2.LINE_AA):
           # FPS calculation
