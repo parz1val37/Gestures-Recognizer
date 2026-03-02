@@ -1,5 +1,5 @@
 ## Gestures Recognition
-Recognizes gestures("Closed fist, Thumbs up, Thumbs down, Victory)
+Recognizes gestures("Closed fist✊, Thumbs up 👍, Thumbs down 👎, Victory ✌️) and Count fingers.
 - can be trained to recognize any gesture
 
 More gestures will be added
