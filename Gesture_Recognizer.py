@@ -122,18 +122,45 @@ def Gesture_Recognizer():
                 0.7,(240, 248, 247),2)
             
             #-------Custom Gestures------
-            def is_one(hand_landmarks):
-
+            def is_One(hand_landmarks):
               index_up = hand_landmarks[8].y < hand_landmarks[6].y
               middle_down = hand_landmarks[12].y > hand_landmarks[10].y
               ring_down = hand_landmarks[16].y > hand_landmarks[14].y
               pinky_down = hand_landmarks[20].y > hand_landmarks[18].y
 
               return index_up and middle_down and ring_down and pinky_down
+            
+            def is_Three(hand_landmarks):
+              index_up = hand_landmarks[8].y < hand_landmarks[6].y
+              middle_up = hand_landmarks[12].y < hand_landmarks[10].y
+              ring_up = hand_landmarks[16].y < hand_landmarks[14].y
+              pinky_down = hand_landmarks[20].y > hand_landmarks[19].y
 
-            if is_one(hand_landmarks):
+              return index_up and middle_up and ring_up and pinky_down
+
+            def is_Four(hand_landmarks):
+              index_up = hand_landmarks[8].y < hand_landmarks[6].y
+              middle_up = hand_landmarks[12].y < hand_landmarks[10].y
+              ring_up = hand_landmarks[16].y < hand_landmarks[14].y
+              pinky_up = hand_landmarks[20].y < hand_landmarks[18].y
+              thumb_down = (hand_landmarks[4].y > hand_landmarks[3].y) or (hand_landmarks[4].x>hand_landmarks[3].x)
+
+              return index_up and middle_up and ring_up and pinky_up and thumb_down
+            
+            
+            if is_One(hand_landmarks):
               gesture_name="One"
               score=0.8
+              display_Labeled_gesture(gesture_name, score)
+            
+            elif is_Three(hand_landmarks):
+              gesture_name="Three"
+              score=0.77
+              display_Labeled_gesture(gesture_name, score)
+            
+            elif is_Four(hand_landmarks):
+              gesture_name="Four"
+              score=0.83
               display_Labeled_gesture(gesture_name, score)
 
             # Get gesture for this hand
@@ -141,7 +168,6 @@ def Gesture_Recognizer():
               top_gesture = latest_result.gestures[idx][0]
               gesture_name = top_gesture.category_name
               score = round(top_gesture.score, 2)
-
 
               display_Labeled_gesture(gesture_name, score)
 
